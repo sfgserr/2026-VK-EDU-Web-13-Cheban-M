@@ -1,0 +1,17 @@
+{% load static %}
+<div class="card mb-3">
+  <div class="card-body d-flex gap-3">
+    <div class="text-center">
+      <img src="{% static 'core/img/avatar.svg' %}" class="avatar rounded mb-2" alt="Аватар">
+      {% include 'questions/includes/vote.html' with rating=question.rating vote=question.vote %}
+    </div>
+    <div class="flex-grow-1 text-break">
+      <h5><a href="{% url 'question' question.id %}">{{ question.title }}</a></h5>
+      <p>{{ question.text }}</p>
+      <div class="small">
+        <a href="{% url 'question' question.id %}" class="me-3">Ответы ({{ question.answers_count }})</a>
+        {% include 'questions/includes/tags.html' with tags=question.tags %}
+      </div>
+    </div>
+  </div>
+</div>

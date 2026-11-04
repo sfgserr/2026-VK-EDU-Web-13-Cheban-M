@@ -1,0 +1,29 @@
+{% load static %}<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Forum{% endblock %}</title>
+  <link rel="icon" href="{% static 'core/img/favicon.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'core/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/style.css' %}">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+  {% include 'core/includes/header.html' %}
+
+  <main class="container py-4 flex-grow-1">
+    <div class="row g-4">
+      <div class="col-lg-9">
+        {% block content %}{% endblock %}
+      </div>
+      {% include 'core/includes/sidebar.html' %}
+    </div>
+  </main>
+
+  <footer class="border-top bg-white py-3">
+    <div class="container text-muted small">© 2026 Forum</div>
+  </footer>
+
+  <script src="{% static 'core/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

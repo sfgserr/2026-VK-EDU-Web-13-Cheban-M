@@ -1,0 +1,11 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Новые вопросы — Forum{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-baseline gap-3 mb-4">
+  <h1 class="mb-0">Новые вопросы</h1>
+  <a href="{% url 'hot' %}">Горячие</a>
+</div>
+{% include 'questions/includes/question_list.html' %}
+{% endblock %}
