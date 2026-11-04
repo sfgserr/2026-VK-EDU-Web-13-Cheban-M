@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Задать вопрос — Forum</title>
+  <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+  <header class="border-bottom bg-white">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand fs-3 fw-bold" href="index.html">Forum</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Меню">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse gap-3 py-2 py-lg-0" id="nav">
+          <form class="flex-grow-1" action="index.html">
+            <input class="form-control" type="search" name="q" placeholder="Поиск" maxlength="100">
+          </form>
+          <a class="btn btn-success my-2 my-lg-0" href="ask.html">Задать вопрос</a>
+          <div class="d-flex gap-3">
+            <a href="login.html">Войти</a>
+            <a href="signup.html">Регистрация</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container py-4 flex-grow-1">
+    <div class="row g-4">
+      <div class="col-lg-9">
+        <h1 class="mb-4">Задать вопрос</h1>
+        <form class="form-narrow" action="question.html" method="post">
+          <div class="mb-3">
+            <label for="title" class="form-label">Заголовок</label>
+            <input type="text" class="form-control" id="title" name="title" maxlength="150">
+            <div class="form-text">Не более 150 символов.</div>
+          </div>
+          <div class="mb-3">
+            <label for="text" class="form-label">Текст</label>
+            <textarea class="form-control is-invalid" id="text" name="text" rows="6" maxlength="5000"></textarea>
+            <div class="invalid-feedback">Введите текст вопроса.</div>
+            <div class="form-text">Не более 5000 символов.</div>
+          </div>
+          <div class="mb-3">
+            <label for="tags" class="form-label">Теги</label>
+            <input type="text" class="form-control" id="tags" name="tags" maxlength="100">
+            <div class="form-text">Через запятую, не более 3 тегов.</div>
+          </div>
+          <button type="submit" class="btn btn-primary">Спросить</button>
+        </form>
+      </div>
+      <aside class="col-lg-3">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Популярные теги</h5>
+            <div class="d-flex flex-wrap gap-1">
+            <a href="#" class="badge text-bg-secondary text-decoration-none">python</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">django</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">mysql</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">css</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">bootstrap</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">git</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">linux</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">javascript</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Лучшие участники</h5>
+            <ul class="list-unstyled mb-0">
+            <li><a href="#">Mr. Freeman</a></li>
+            <li><a href="#">Dr. House</a></li>
+            <li><a href="#">Bender</a></li>
+            <li><a href="#">Queen Victoria</a></li>
+            <li><a href="#">V. Pupkin</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="border-top bg-white py-3">
+    <div class="container text-muted small">© 2026 Forum</div>
+  </footer>
+
+  <script src="static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

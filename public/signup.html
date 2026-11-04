@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Регистрация — Forum</title>
+  <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+  <header class="border-bottom bg-white">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand fs-3 fw-bold" href="index.html">Forum</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Меню">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse gap-3 py-2 py-lg-0" id="nav">
+          <form class="flex-grow-1" action="index.html">
+            <input class="form-control" type="search" name="q" placeholder="Поиск" maxlength="100">
+          </form>
+          <a class="btn btn-success my-2 my-lg-0" href="ask.html">Задать вопрос</a>
+          <div class="d-flex gap-3">
+            <a href="login.html">Войти</a>
+            <a href="signup.html">Регистрация</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container py-4 flex-grow-1">
+    <div class="row g-4">
+      <div class="col-lg-9">
+        <h1 class="mb-4">Регистрация</h1>
+        <form class="form-narrow" action="index.html" method="post" enctype="multipart/form-data">
+          <div class="alert alert-danger">Не удалось зарегистрироваться. Исправьте ошибки.</div>
+          <div class="mb-3">
+            <label for="login" class="form-label">Логин</label>
+            <input type="text" class="form-control is-invalid" id="login" name="login" maxlength="30" value="dr_pepper">
+            <div class="invalid-feedback">Этот логин уже занят.</div>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control is-invalid" id="email" name="email" maxlength="254" value="dr.pepper@">
+            <div class="invalid-feedback">Введите корректный email.</div>
+          </div>
+          <div class="mb-3">
+            <label for="nickname" class="form-label">Никнейм</label>
+            <input type="text" class="form-control" id="nickname" name="nickname" maxlength="50">
+            <div class="form-text">Будет виден другим пользователям.</div>
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Пароль</label>
+            <input type="password" class="form-control" id="password" name="password" maxlength="128">
+            <div class="form-text">Не менее 8 символов.</div>
+          </div>
+          <div class="mb-3">
+            <label for="password2" class="form-label">Повторите пароль</label>
+            <input type="password" class="form-control" id="password2" name="password2" maxlength="128">
+          </div>
+          <div class="mb-3">
+            <label for="avatar" class="form-label">Аватар</label>
+            <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+          </div>
+          <button type="submit" class="btn btn-primary me-3">Зарегистрироваться</button>
+          <a href="login.html">Уже есть аккаунт?</a>
+        </form>
+      </div>
+      <aside class="col-lg-3">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Популярные теги</h5>
+            <div class="d-flex flex-wrap gap-1">
+            <a href="#" class="badge text-bg-secondary text-decoration-none">python</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">django</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">mysql</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">css</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">bootstrap</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">git</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">linux</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">javascript</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Лучшие участники</h5>
+            <ul class="list-unstyled mb-0">
+            <li><a href="#">Mr. Freeman</a></li>
+            <li><a href="#">Dr. House</a></li>
+            <li><a href="#">Bender</a></li>
+            <li><a href="#">Queen Victoria</a></li>
+            <li><a href="#">V. Pupkin</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="border-top bg-white py-3">
+    <div class="container text-muted small">© 2026 Forum</div>
+  </footer>
+
+  <script src="static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

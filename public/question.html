@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Как настроить виртуальное окружение Python? — Forum</title>
+  <link rel="icon" href="static/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="static/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+  <header class="border-bottom bg-white">
+    <nav class="navbar navbar-expand-lg">
+      <div class="container">
+        <a class="navbar-brand fs-3 fw-bold" href="index.html">Forum</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Меню">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse gap-3 py-2 py-lg-0" id="nav">
+          <form class="flex-grow-1" action="index.html">
+            <input class="form-control" type="search" name="q" placeholder="Поиск" maxlength="100">
+          </form>
+          <a class="btn btn-success my-2 my-lg-0" href="ask.html">Задать вопрос</a>
+          <div class="d-flex gap-3">
+            <a href="login.html">Войти</a>
+            <a href="signup.html">Регистрация</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container py-4 flex-grow-1">
+    <div class="row g-4">
+      <div class="col-lg-9">
+        <div class="card mb-4">
+          <div class="card-body d-flex gap-3">
+            <div class="text-center">
+              <img src="static/img/avatar.svg" class="avatar-lg rounded mb-2" alt="Аватар">
+              <div class="vote">
+                <button type="button" class="btn btn-sm btn-outline-secondary">▲</button>
+                <div class="fw-bold">27</div>
+                <button type="button" class="btn btn-sm btn-outline-secondary">▼</button>
+              </div>
+            </div>
+            <div class="flex-grow-1 text-break">
+              <h1 class="h3">Как настроить виртуальное окружение Python?</h1>
+              <p>Начинаю новый проект на Django и хочу изолировать зависимости от системного Python.
+                Пробовал ставить пакеты глобально, но версии начали конфликтовать. Как правильно?</p>
+              <div class="small">
+                Теги: <a href="#" class="badge text-bg-light border text-decoration-none">python</a> <a href="#" class="badge text-bg-light border text-decoration-none">django</a>
+                <span class="text-muted ms-2">5 часов назад</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h4 class="mb-3">Ответы</h4>
+        <div class="card mb-3 border-success">
+          <div class="card-body d-flex gap-3">
+            <div class="text-center">
+              <img src="static/img/avatar.svg" class="avatar rounded mb-2" alt="Аватар">
+              <div class="vote">
+                <button type="button" class="btn btn-sm btn-success">▲</button>
+                <div class="fw-bold">18</div>
+                <button type="button" class="btn btn-sm btn-outline-secondary">▼</button>
+              </div>
+            </div>
+            <div class="flex-grow-1 text-break">
+              <p>Используйте встроенный модуль venv: <code>python3 -m venv .venv</code>, а папку .venv добавьте в .gitignore.</p>
+              <div class="d-flex flex-wrap justify-content-between gap-2 small">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="correct1" checked>
+                  <label class="form-check-label" for="correct1">Правильный ответ</label>
+                </div>
+                <span class="text-muted">1 час назад</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card mb-3">
+          <div class="card-body d-flex gap-3">
+            <div class="text-center">
+              <img src="static/img/avatar.svg" class="avatar rounded mb-2" alt="Аватар">
+              <div class="vote">
+                <button type="button" class="btn btn-sm btn-outline-secondary">▲</button>
+                <div class="fw-bold">4</div>
+                <button type="button" class="btn btn-sm btn-outline-secondary">▼</button>
+              </div>
+            </div>
+            <div class="flex-grow-1 text-break">
+              <p>Можно попробовать Poetry — он сам создаёт окружение и фиксирует версии.</p>
+              <div class="d-flex flex-wrap justify-content-between gap-2 small">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="correct2">
+                  <label class="form-check-label" for="correct2">Правильный ответ</label>
+                </div>
+                <span class="text-muted">1 час назад</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <nav class="mt-4">
+          <ul class="pagination flex-wrap">
+            <li class="page-item active"><span class="page-link">1</span></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+          </ul>
+        </nav>
+
+        <form class="mt-4" action="question.html" method="post">
+          <textarea class="form-control" name="text" rows="4" maxlength="5000" placeholder="Введите ваш ответ"></textarea>
+          <div class="form-text mb-2">Не более 5000 символов.</div>
+          <button type="submit" class="btn btn-primary">Ответить</button>
+        </form>
+      </div>
+      <aside class="col-lg-3">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Популярные теги</h5>
+            <div class="d-flex flex-wrap gap-1">
+            <a href="#" class="badge text-bg-secondary text-decoration-none">python</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">django</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">mysql</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">css</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">bootstrap</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">git</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">linux</a>
+            <a href="#" class="badge text-bg-secondary text-decoration-none">javascript</a>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Лучшие участники</h5>
+            <ul class="list-unstyled mb-0">
+            <li><a href="#">Mr. Freeman</a></li>
+            <li><a href="#">Dr. House</a></li>
+            <li><a href="#">Bender</a></li>
+            <li><a href="#">Queen Victoria</a></li>
+            <li><a href="#">V. Pupkin</a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="border-top bg-white py-3">
+    <div class="container text-muted small">© 2026 Forum</div>
+  </footer>
+
+  <script src="static/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
