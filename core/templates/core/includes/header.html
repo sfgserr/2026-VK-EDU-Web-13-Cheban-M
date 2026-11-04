@@ -1,0 +1,32 @@
+{% load static %}
+<header class="border-bottom bg-white">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand fs-3 fw-bold" href="{% url 'index' %}">Forum</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-label="Меню">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse gap-3 py-2 py-lg-0" id="nav">
+        <form class="flex-grow-1" action="{% url 'index' %}">
+          <input class="form-control" type="search" name="q" placeholder="Поиск" maxlength="100">
+        </form>
+        <a class="btn btn-success my-2 my-lg-0" href="{% url 'ask' %}">Задать вопрос</a>
+        {% if authorized %}
+          <div class="d-flex align-items-center gap-2">
+            <img src="{% static 'core/img/avatar.svg' %}" class="avatar-sm rounded" alt="Аватар">
+            <div>
+              <div class="fw-bold">Dr. Pepper</div>
+              <a href="{% url 'profile' %}" class="me-2">Настройки</a>
+              <a href="{% url 'index' %}">Выйти</a>
+            </div>
+          </div>
+        {% else %}
+          <div class="d-flex gap-3">
+            <a href="{% url 'login' %}">Войти</a>
+            <a href="{% url 'signup' %}">Регистрация</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </nav>
+</header>

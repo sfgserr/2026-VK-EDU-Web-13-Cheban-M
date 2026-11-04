@@ -1,17 +1,39 @@
 # Forum
 
-Учебный проект VK Education — сервис вопросов и ответов. ДЗ 1: статическая вёрстка на Bootstrap.
+Учебный проект VK Education — сервис вопросов и ответов на Django.
 
-## Как открыть
+## Запуск локально
 
-Открыть `public/index.html` в браузере. Вся статика лежит локально в `public/static/`.
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+python manage.py runserver
+```
+
+Открыть <http://127.0.0.1:8000/>.
+
+## Запуск через Docker Compose
+
+```bash
+cp .env.example .env
+docker compose up --build
+```
+
+Открыть <http://localhost:8000/>.
 
 ## Страницы
 
-- `public/base.html` — общий layout
-- `public/index.html` — список вопросов
-- `public/question.html` — страница вопроса с ответами
-- `public/ask.html` — добавление вопроса
-- `public/login.html` — вход
-- `public/signup.html` — регистрация
-- `public/profile.html` — настройки профиля
+| URL | Страница |
+|-----|----------|
+| `/` | Новые вопросы |
+| `/hot/` | Горячие вопросы |
+| `/tag/<тег>/` | Вопросы по тегу |
+| `/question/<id>/` | Вопрос с ответами |
+| `/ask/` | Задать вопрос |
+| `/login/` | Вход |
+| `/signup/` | Регистрация |
+| `/profile/` | Настройки профиля |
+
+Статическая вёрстка из ДЗ 1 лежит в `public/`.

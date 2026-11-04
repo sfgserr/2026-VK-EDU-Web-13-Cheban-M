@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Вход — Forum{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Вход</h1>
+<form class="form-narrow" action="{% url 'login' %}" method="post">
+  {% csrf_token %}
+  <div class="alert alert-danger">Неверный логин или пароль.</div>
+  <div class="mb-3">
+    <label for="login" class="form-label">Логин</label>
+    <input type="text" class="form-control" id="login" name="login" maxlength="30">
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Пароль</label>
+    <input type="password" class="form-control" id="password" name="password" maxlength="128">
+  </div>
+  <button type="submit" class="btn btn-primary me-3">Войти</button>
+  <a href="{% url 'signup' %}">Регистрация</a>
+</form>
+{% endblock %}

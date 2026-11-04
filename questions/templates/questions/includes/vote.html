@@ -1,0 +1,5 @@
+<div class="vote">
+  <button type="button" class="btn btn-sm {% if vote == 'like' %}btn-success{% else %}btn-outline-secondary{% endif %}">▲</button>
+  <div class="fw-bold">{{ rating }}</div>
+  <button type="button" class="btn btn-sm {% if vote == 'dislike' %}btn-danger{% else %}btn-outline-secondary{% endif %}">▼</button>
+</div>

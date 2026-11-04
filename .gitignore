@@ -1,38 +1,21 @@
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
-
-# IDE / editors
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
+# Virtual environment
+venv/
+.venv/
 
 # Python
 __pycache__/
-*.py[cod]
-*.egg-info/
-.venv/
-venv/
-env/
-.env
+*.pyc
 
 # Django
+db.sqlite3
 *.sqlite3
-db.sqlite3-journal
-media/
-staticfiles/
+/media/
+/static/
 
-# Logs
-*.log
-logs/
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
 
-# Dependencies / build
-node_modules/
-dist/
-build/
-.coverage
-htmlcov/
-.pytest_cache/
+# Environment
+.env
