@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Регистрация — Forum{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Регистрация</h1>
+<form class="form-narrow" action="{% url 'signup' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  <div class="alert alert-danger">Не удалось зарегистрироваться. Исправьте ошибки.</div>
+  <div class="mb-3">
+    <label for="login" class="form-label">Логин</label>
+    <input type="text" class="form-control is-invalid" id="login" name="login" maxlength="30" value="dr_pepper">
+    <div class="invalid-feedback">Этот логин уже занят.</div>
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control is-invalid" id="email" name="email" maxlength="254" value="dr.pepper@">
+    <div class="invalid-feedback">Введите корректный email.</div>
+  </div>
+  <div class="mb-3">
+    <label for="nickname" class="form-label">Никнейм</label>
+    <input type="text" class="form-control" id="nickname" name="nickname" maxlength="50">
+    <div class="form-text">Будет виден другим пользователям.</div>
+  </div>
+  <div class="mb-3">
+    <label for="password" class="form-label">Пароль</label>
+    <input type="password" class="form-control" id="password" name="password" maxlength="128">
+    <div class="form-text">Не менее 8 символов.</div>
+  </div>
+  <div class="mb-3">
+    <label for="password2" class="form-label">Повторите пароль</label>
+    <input type="password" class="form-control" id="password2" name="password2" maxlength="128">
+  </div>
+  <div class="mb-3">
+    <label for="avatar" class="form-label">Аватар</label>
+    <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+  </div>
+  <button type="submit" class="btn btn-primary me-3">Зарегистрироваться</button>
+  <a href="{% url 'login' %}">Уже есть аккаунт?</a>
+</form>
+{% endblock %}

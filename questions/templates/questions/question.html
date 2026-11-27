@@ -1,0 +1,36 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ question.title }} — Forum{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+  <div class="card-body d-flex gap-3">
+    <div class="text-center">
+      <img src="{% static 'core/img/avatar.svg' %}" class="avatar-lg rounded mb-2" alt="Аватар">
+      {% include 'questions/includes/vote.html' with rating=question.rating vote=question.vote %}
+    </div>
+    <div class="flex-grow-1 text-break">
+      <h1 class="h3">{{ question.title }}</h1>
+      <p>{{ question.text }}</p>
+      <div class="small">
+        {% include 'questions/includes/tags.html' with tags=question.tags %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4 class="mb-3">Ответы</h4>
+{% for answer in page %}
+  {% include 'questions/includes/answer_card.html' %}
+{% endfor %}
+
+{% include 'core/includes/pagination.html' %}
+
+<form class="mt-4" action="{% url 'question' question.id %}" method="post">
+  {% csrf_token %}
+  <textarea class="form-control" name="text" rows="4" maxlength="5000" placeholder="Введите ваш ответ"></textarea>
+  <div class="form-text mb-2">Не более 5000 символов.</div>
+  <button type="submit" class="btn btn-primary">Ответить</button>
+</form>
+{% endblock %}
