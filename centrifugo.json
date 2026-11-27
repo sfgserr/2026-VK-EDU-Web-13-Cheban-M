@@ -1,0 +1,12 @@
+{
+  "channel": {
+    "namespaces": [
+      {
+        "name": "questions",
+        "allow_subscribe_for_client": true,
+        "allow_subscribe_for_anonymous": true,
+        "channel_regex": "^[0-9]+$"
+      }
+    ]
+  }
+}

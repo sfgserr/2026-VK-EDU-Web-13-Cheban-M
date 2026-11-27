@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Регистрация — Forum{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Регистрация</h1>
+<form class="form-narrow" action="{% url 'signup' %}" method="post">
+  {% csrf_token %}
+  {% include 'core/includes/form_fields.html' %}
+  <button type="submit" class="btn btn-primary me-3">Зарегистрироваться</button>
+  <a href="{% url 'login' %}">Уже есть аккаунт?</a>
+</form>
+{% endblock %}

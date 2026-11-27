@@ -1,0 +1,58 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}{{ question.title }} — Forum{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+  <div class="card-body d-flex gap-3">
+    <div class="text-center">
+      {% include 'core/includes/avatar.html' with account=question.author image_class='avatar-lg mb-2' %}
+      {% include 'questions/includes/vote.html' with item=question kind='question' %}
+    </div>
+    <div class="flex-grow-1 text-break">
+      <h1 class="h3">{{ question.title }}</h1>
+      <p>{{ question.text }}</p>
+      <p class="small text-muted">{{ question.author.first_name|default:question.author.username }} · {{ question.created_at|date:"d.m.Y H:i" }}</p>
+      <div class="small">
+        {% include 'questions/includes/tags.html' with tags=question.tags.all %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<h4 class="mb-3">Ответы</h4>
+<div class="alert alert-info" id="new-answer-notice" role="status" hidden>
+  Появился новый ответ. <a class="alert-link">Перейти к ответу</a>
+</div>
+<div id="answer-list" data-page="{{ page.number }}" data-channel="{{ channel }}"
+     data-websocket-url="{{ websocket_url }}" data-token-url="{% url 'websocket_token' %}">
+  {% for answer in page %}
+    {% include 'questions/includes/answer_card.html' %}
+  {% empty %}
+    <p class="text-muted" id="no-answers">Пока нет ни одного ответа к этому вопросу.</p>
+  {% endfor %}
+</div>
+
+{% include 'core/includes/pagination.html' %}
+
+{% if user.is_authenticated %}
+<form class="mt-4" id="answer-form" action="#answer-form" method="post">
+  {% csrf_token %}
+  {% include 'core/includes/form_fields.html' %}
+  <button type="submit" class="btn btn-primary">Ответить</button>
+</form>
+{% else %}
+<div class="mt-4" title="Войдите, чтобы добавить ответ">
+  <button type="button" class="btn btn-primary" disabled>Ответить</button>
+  <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Войдите, чтобы добавить ответ</a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {% if websocket_url %}
+    <script src="{% static 'questions/vendor/centrifuge.js' %}" defer></script>
+    <script src="{% static 'questions/js/realtime.js' %}" defer></script>
+  {% endif %}
+{% endblock %}

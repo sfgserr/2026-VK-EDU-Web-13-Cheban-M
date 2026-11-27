@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Вход — Forum{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Вход</h1>
+<form class="form-narrow" action="{% url 'login' %}" method="post">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ next }}">
+  {% include 'core/includes/form_fields.html' %}
+  <button type="submit" class="btn btn-primary me-3">Войти</button>
+  <a href="{% url 'signup' %}">Регистрация</a>
+</form>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Настройки — Forum{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Настройки профиля</h1>
+{% include 'core/includes/avatar.html' with account=user image_class='avatar-lg mb-3' %}
+<form class="form-narrow" action="{% url 'profile' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% include 'core/includes/form_fields.html' %}
+  <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+{% endblock %}
