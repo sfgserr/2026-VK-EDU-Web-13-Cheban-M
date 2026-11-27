@@ -1,0 +1,12 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Задать вопрос — Forum{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Задать вопрос</h1>
+<form class="form-narrow" action="{% url 'ask' %}" method="post">
+  {% csrf_token %}
+  {% include 'core/includes/form_fields.html' %}
+  <button type="submit" class="btn btn-primary">Спросить</button>
+</form>
+{% endblock %}
