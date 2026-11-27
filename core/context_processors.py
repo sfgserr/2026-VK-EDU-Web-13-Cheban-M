@@ -1,9 +1,9 @@
-POPULAR_TAGS = ['python', 'django', 'mysql', 'css', 'bootstrap', 'git', 'linux', 'javascript']
-BEST_MEMBERS = ['Mr. Freeman', 'Dr. House', 'Bender', 'Queen Victoria', 'V. Pupkin']
+from core.models import Profile
+from questions.models import Tag
 
 
 def sidebar(request):
     return {
-        'popular_tags': POPULAR_TAGS,
-        'best_members': BEST_MEMBERS,
+        'popular_tags': Tag.objects.popular(),
+        'best_members': Profile.objects.best(),
     }

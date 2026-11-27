@@ -1,5 +1,22 @@
-<div class="vote">
-  <button type="button" class="btn btn-sm {% if vote == 'like' %}btn-success{% else %}btn-outline-secondary{% endif %}">▲</button>
-  <div class="fw-bold">{{ rating }}</div>
-  <button type="button" class="btn btn-sm {% if vote == 'dislike' %}btn-danger{% else %}btn-outline-secondary{% endif %}">▼</button>
+{% if user.is_authenticated %}
+<form class="vote" action="{% url 'vote' %}" method="post" data-ajax="vote">
+  {% csrf_token %}
+  <input type="hidden" name="kind" value="{{ kind }}">
+  <input type="hidden" name="target_id" value="{{ item.pk }}">
+  <button type="submit" name="value" value="1" aria-label="Лайк"
+          class="btn btn-sm {% if item.vote == 1 %}btn-success{% else %}btn-outline-secondary{% endif %}"
+          aria-pressed="{% if item.vote == 1 %}true{% else %}false{% endif %}"
+          {% if item.vote == 1 %}disabled{% endif %}>▲</button>
+  <div class="fw-bold" data-rating aria-live="polite">{{ item.rating }}</div>
+  <button type="submit" name="value" value="-1" aria-label="Дизлайк"
+          class="btn btn-sm {% if item.vote == -1 %}btn-danger{% else %}btn-outline-secondary{% endif %}"
+          aria-pressed="{% if item.vote == -1 %}true{% else %}false{% endif %}"
+          {% if item.vote == -1 %}disabled{% endif %}>▼</button>
+</form>
+{% else %}
+<div class="vote" title="Войдите, чтобы голосовать">
+  <button type="button" class="btn btn-sm btn-outline-secondary" aria-label="Лайк" disabled>▲</button>
+  <div class="fw-bold">{{ item.rating }}</div>
+  <button type="button" class="btn btn-sm btn-outline-secondary" aria-label="Дизлайк" disabled>▼</button>
 </div>
+{% endif %}

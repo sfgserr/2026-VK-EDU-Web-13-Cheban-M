@@ -9,4 +9,5 @@ def paginate(objects_list, request, per_page=10):
         page = paginator.page(1)
     except EmptyPage:
         page = paginator.page(paginator.num_pages)
+    page.pagination_range = paginator.get_elided_page_range(page.number, on_each_side=2, on_ends=1)
     return page

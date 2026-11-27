@@ -7,8 +7,10 @@
       <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
     {% endif %}
 
-    {% for number in page.paginator.page_range %}
-      {% if number == page.number %}
+    {% for number in page.pagination_range %}
+      {% if number == page.paginator.ELLIPSIS %}
+        <li class="page-item disabled"><span class="page-link">{{ number }}</span></li>
+      {% elif number == page.number %}
         <li class="page-item active"><span class="page-link">{{ number }}</span></li>
       {% else %}
         <li class="page-item"><a class="page-link" href="?page={{ number }}">{{ number }}</a></li>
