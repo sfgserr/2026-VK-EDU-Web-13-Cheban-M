@@ -9,16 +9,10 @@ def avatar_upload_path(instance, filename):
     return f'avatars/{uuid4().hex}{Path(filename).suffix.lower()}'
 
 
-class ProfileManager(models.Manager):
-    def best(self):
-        return self.select_related('user').order_by('-rating', 'id')[:5]
-
-
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name='Пользователь')
     avatar = models.ImageField('Аватар', upload_to=avatar_upload_path, blank=True)
     rating = models.IntegerField('Рейтинг', default=0, db_index=True)
-    objects = ProfileManager()
 
     class Meta:
         verbose_name = 'Профиль'

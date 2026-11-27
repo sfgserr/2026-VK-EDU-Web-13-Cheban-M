@@ -1,12 +1,27 @@
 from django.conf import settings
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
 from django.db import models
 from django.db.models.functions import Coalesce
 from django.urls import reverse
 
 
+SEARCH_CONFIG = 'russian'
+QUESTION_SEARCH_VECTOR = SearchVector('title', 'text', config=SEARCH_CONFIG)
+
+
+class PrefixSearchQuery(SearchQuery):
+    # PostgreSQL quotes input lexemes before we add the prefix operator to the last one.
+    template = "(NULLIF(%(function)s(%(expressions)s)::text || ':*', ':*'))::tsquery"
+
+
 class TagManager(models.Manager):
-    def popular(self):
-        return self.annotate(total=models.Count('questions')).order_by('-total', 'name')[:8]
+    def popular(self, since):
+        return (
+            self.filter(questions__created_at__gte=since)
+            .annotate(total=models.Count('questions'))
+            .order_by('-total', 'name')[:10]
+        )
 
 
 class Tag(models.Model):
@@ -46,6 +61,15 @@ class QuestionQuerySet(VoteQuerySet):
             .annotate(answers_count=Coalesce(models.Subquery(counts), 0))
         )
 
+    def search(self, text):
+        query = PrefixSearchQuery(text, config=SEARCH_CONFIG)
+        return (
+            self.alias(search_vector=QUESTION_SEARCH_VECTOR)
+            .filter(search_vector=query)
+            .alias(rank=SearchRank(QUESTION_SEARCH_VECTOR, query))
+            .order_by('-rank', '-id')
+        )
+
     def newest(self):
         return self.for_display().order_by('-created_at', '-id')
 
@@ -69,7 +93,11 @@ class Question(models.Model):
         verbose_name = 'Вопрос'
         verbose_name_plural = 'Вопросы'
         ordering = ['-created_at', '-id']
-        indexes = [models.Index(fields=['-created_at', '-id']), models.Index(fields=['-rating', '-id'])]
+        indexes = [
+            models.Index(fields=['-created_at', '-id']),
+            models.Index(fields=['-rating', '-id']),
+            GinIndex(QUESTION_SEARCH_VECTOR, name='question_search_gin'),
+        ]
 
     def __str__(self):
         return self.title

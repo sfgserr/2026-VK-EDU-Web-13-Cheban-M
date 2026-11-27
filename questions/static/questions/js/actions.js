@@ -28,49 +28,58 @@ function showVote(form, result) {
   }
 }
 
-document.querySelectorAll('form[data-ajax="vote"]').forEach((form) => {
-  const buttons = form.querySelectorAll('button[name="value"]');
-  form.addEventListener('submit', async (event) => {
+document.addEventListener('submit', async (event) => {
+  const form = event.target;
+  if (form.matches('form[data-ajax="correct"]')) {
     event.preventDefault();
-    const button = event.submitter;
-    if (!button || button.disabled) return;
+    return;
+  }
+  if (!form.matches('form[data-ajax="vote"]')) return;
 
-    buttons.forEach((item) => { item.disabled = true; });
-    try {
-      showVote(form, await submitAction(form, { value: button.value }));
-    } catch (error) {
-      if (error.result?.duplicate) showVote(form, error.result);
-      alert(error.message);
-    } finally {
-      buttons.forEach((item) => {
-        item.disabled = item.getAttribute('aria-pressed') === 'true';
-      });
-    }
-  });
+  event.preventDefault();
+  const button = event.submitter;
+  if (!button || button.disabled) return;
+
+  const buttons = form.querySelectorAll('button[name="value"]');
+  buttons.forEach((item) => { item.disabled = true; });
+  try {
+    showVote(form, await submitAction(form, { value: button.value }));
+  } catch (error) {
+    if (error.result?.duplicate) showVote(form, error.result);
+    alert(error.message);
+  } finally {
+    buttons.forEach((item) => {
+      item.disabled = item.getAttribute('aria-pressed') === 'true';
+    });
+  }
 });
 
-const correctForms = document.querySelectorAll('form[data-ajax="correct"]');
-const checkboxes = [...correctForms].map((form) => form.querySelector('input[type="checkbox"]'));
+let savingCorrectAnswer = false;
+document.addEventListener('change', async (event) => {
+  const checkbox = event.target;
+  const form = checkbox.closest('form[data-ajax="correct"]');
+  if (!form || checkbox.type !== 'checkbox') return;
 
-correctForms.forEach((form, index) => {
-  const checkbox = checkboxes[index];
-  form.addEventListener('submit', (event) => event.preventDefault());
-  checkbox.addEventListener('change', async () => {
-    const checked = checkbox.checked;
-    checkboxes.forEach((item) => { item.disabled = true; });
-
-    try {
-      const result = await submitAction(form, { correct: checked ? '1' : '0' });
-      checkboxes.forEach((item) => {
-        if (item === checkbox) item.checked = result.correct;
-        else if (result.correct) item.checked = false;
-        item.closest('.card').classList.toggle('border-success', item.checked);
-      });
-    } catch (error) {
-      checkbox.checked = !checked;
-      alert(error.message);
-    } finally {
-      checkboxes.forEach((item) => { item.disabled = false; });
-    }
-  });
+  const checked = checkbox.checked;
+  if (savingCorrectAnswer) {
+    checkbox.checked = !checked;
+    return;
+  }
+  const checkboxes = document.querySelectorAll('form[data-ajax="correct"] input[type="checkbox"]');
+  savingCorrectAnswer = true;
+  checkboxes.forEach((item) => { item.disabled = true; });
+  try {
+    const result = await submitAction(form, { correct: checked ? '1' : '0' });
+    checkboxes.forEach((item) => {
+      if (item === checkbox) item.checked = result.correct;
+      else if (result.correct) item.checked = false;
+      item.closest('.card').classList.toggle('border-success', item.checked);
+    });
+  } catch (error) {
+    checkbox.checked = !checked;
+    alert(error.message);
+  } finally {
+    checkboxes.forEach((item) => { item.disabled = false; });
+    savingCorrectAnswer = false;
+  }
 });

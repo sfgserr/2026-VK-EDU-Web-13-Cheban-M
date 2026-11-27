@@ -4,15 +4,18 @@
 
 ## Запуск через Docker Compose
 
-Создать настройки (в `.env.docker` хост БД — `db`):
+Создайте `.env.docker` из примера, если файла ещё нет.
 
 ```bash
 cp .env.example .env.docker
-# В .env.docker заменить DB_HOST на db, задать пароль и секретный ключ.
+# В .env.docker задайте DB_PASSWORD, DJANGO_SECRET_KEY, CENTRIFUGO_API_KEY
+# и CENTRIFUGO_TOKEN_SECRET. Для каждого ключа можно выполнить openssl rand -hex 32.
 docker compose --env-file .env.docker up --build
 ```
 
-Миграции применяются автоматически при запуске. Открыть http://localhost:8000/.
+Миграции применяются при запуске. Forum доступен на <http://localhost:8000/>,
+письма для проверки — в MailDev на <http://localhost:1080/>.
+Чтобы проверить обновления, откройте один вопрос в двух вкладках и добавьте ответ в одной из них.
 
 ```bash
 docker compose --env-file .env.docker exec web python manage.py createsuperuser
@@ -26,12 +29,13 @@ docker compose --env-file .env.docker exec web python manage.py fill_db 100
 
 ## Локальный запуск
 
-Нужен Python 3.9+ и PostgreSQL. Можно запустить только базу через Docker:
+Для локального запуска Django и Celery нужен Python 3.9+. Остальные сервисы
+можно запустить через Docker. Создайте `.env.local` из примера, если файла ещё нет.
 
 ```bash
 cp .env.example .env.local
-# Задать пароль и секретный ключ; DB_HOST оставить 127.0.0.1.
-docker compose --env-file .env.local up -d db
+# Задайте пароль БД, секретный ключ Django и оба ключа Centrifugo.
+docker compose --env-file .env.local up -d db redis centrifugo maildev
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
@@ -40,9 +44,15 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-При установленном локальном PostgreSQL вместо Docker создать БД и пользователя,
-указав параметры подключения в `.env.local`.
-Открыть http://127.0.0.1:8000/. Админка: `/admin/`.
+В двух отдельных терминалах с активным виртуальным окружением запустите:
+
+```bash
+celery -A application worker --loglevel=info --concurrency=2
+celery -A application beat --loglevel=info
+```
+
+Если PostgreSQL уже установлен локально, можно создать БД и пользователя вручную
+и указать параметры подключения в `.env.local`. Админка доступна по `/admin/`.
 Настройки локального запуска читаются из `.env.local`; другой файл можно указать через `ENV_FILE`.
 `.env.local` и `.env.docker` не коммитятся, образец настроек — `.env.example`.
 

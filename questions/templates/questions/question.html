@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ question.title }} — Forum{% endblock %}
 
@@ -21,11 +22,17 @@
 </div>
 
 <h4 class="mb-3">Ответы</h4>
-{% for answer in page %}
-  {% include 'questions/includes/answer_card.html' %}
-{% empty %}
-<p class="text-muted">Пока нет ни одного ответа к этому вопросу.</p>
-{% endfor %}
+<div class="alert alert-info" id="new-answer-notice" role="status" hidden>
+  Появился новый ответ. <a class="alert-link">Перейти к ответу</a>
+</div>
+<div id="answer-list" data-page="{{ page.number }}" data-channel="{{ channel }}"
+     data-websocket-url="{{ websocket_url }}" data-token-url="{% url 'websocket_token' %}">
+  {% for answer in page %}
+    {% include 'questions/includes/answer_card.html' %}
+  {% empty %}
+    <p class="text-muted" id="no-answers">Пока нет ни одного ответа к этому вопросу.</p>
+  {% endfor %}
+</div>
 
 {% include 'core/includes/pagination.html' %}
 
@@ -41,4 +48,11 @@
   <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}">Войдите, чтобы добавить ответ</a>
 </div>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+  {% if websocket_url %}
+    <script src="{% static 'questions/vendor/centrifuge.js' %}" defer></script>
+    <script src="{% static 'questions/js/realtime.js' %}" defer></script>
+  {% endif %}
 {% endblock %}

@@ -1,19 +1,45 @@
+import logging
+import time
+
+import jwt
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ObjectDoesNotExist
-from django.http import JsonResponse
+from django.db import transaction
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.cache import never_cache
+from django.views.decorators.http import require_GET
 from django.views.csrf import csrf_failure as default_csrf_failure
+from kombu.exceptions import OperationalError
 
 from core.utils import paginate
 from questions.forms import AnswerForm, CorrectAnswerForm, QuestionForm, VoteForm
 from questions.models import Answer, Question, Tag
+from questions.tasks import email_question_author, publish_answer, question_channel
 
 ANSWERS_PER_PAGE = 10
+logger = logging.getLogger(__name__)
+
+
+def search_text(request):
+    return request.GET.get('q', '').replace('\x00', '').strip()[:100]
 
 
 def index(request):
-    page = paginate(Question.objects.newest().with_vote(request.user), request)
-    return render(request, 'questions/index.html', {'page': page})
+    query = search_text(request)
+    items = Question.objects.search(query).for_display() if query else Question.objects.newest()
+    page = paginate(items.with_vote(request.user), request)
+    return render(request, 'questions/index.html', {'page': page, 'query': query})
+
+
+@require_GET
+def search_suggestions(request):
+    query = search_text(request)
+    items = Question.objects.search(query).only('title')[:8] if len(query) >= 2 else []
+    return JsonResponse({'results': [
+        {'title': item.title, 'url': item.get_absolute_url()} for item in items
+    ]})
 
 
 def hot(request):
@@ -27,19 +53,60 @@ def tag(request, tag_name):
     return render(request, 'questions/tag.html', {'page': page, 'tag_name': tag.name})
 
 
+def enqueue_answer_jobs(answer, url):
+    if settings.CENTRIFUGO_API_KEY:
+        enqueue(publish_answer, answer.question_id, answer.pk, url)
+    enqueue(email_question_author, answer.pk, url)
+
+
+def enqueue(task, *args):
+    try:
+        task.delay(*args)
+    except OperationalError:
+        logger.exception('Could not enqueue %s', task.name)
+
+
 @login_required
 def add_answer(request, question):
     form = AnswerForm(request.POST)
     if form.is_valid():
         answer = form.save(author=request.user, question=question)
-        return redirect(answer.get_page_url(ANSWERS_PER_PAGE))
+        url = answer.get_page_url(ANSWERS_PER_PAGE)
+        transaction.on_commit(lambda: enqueue_answer_jobs(answer, url))
+        return redirect(url)
     return render_question(request, question, form)
 
 
 def render_question(request, question, form):
     answers = Answer.objects.for_question(question).with_vote(request.user)
     page = paginate(answers, request, per_page=ANSWERS_PER_PAGE)
-    return render(request, 'questions/question.html', {'question': question, 'page': page, 'form': form})
+    return render(request, 'questions/question.html', {
+        'question': question,
+        'page': page,
+        'form': form,
+        'websocket_url': settings.CENTRIFUGO_WS_URL if settings.CENTRIFUGO_TOKEN_SECRET else '',
+        'channel': question_channel(question.pk),
+    })
+
+
+@require_GET
+@never_cache
+def websocket_token(request):
+    if not settings.CENTRIFUGO_TOKEN_SECRET:
+        raise Http404
+    claims = {
+        'sub': str(request.user.pk) if request.user.is_authenticated else '',
+        'exp': int(time.time()) + 300,
+    }
+    return JsonResponse({'token': jwt.encode(claims, settings.CENTRIFUGO_TOKEN_SECRET, algorithm='HS256')})
+
+
+@require_GET
+@never_cache
+def answer_card(request, question_id, answer_id):
+    answers = Answer.objects.select_related('author__profile', 'question').with_vote(request.user)
+    answer = get_object_or_404(answers, pk=answer_id, question_id=question_id)
+    return render(request, 'questions/includes/answer_card.html', {'answer': answer, 'question': answer.question})
 
 
 def question(request, question_id):

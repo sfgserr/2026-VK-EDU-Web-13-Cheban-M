@@ -1,11 +1,15 @@
 {% extends 'core/base.html' %}
 
-{% block title %}Новые вопросы — Forum{% endblock %}
+{% block title %}{% if query %}Поиск{% else %}Новые вопросы{% endif %} — Forum{% endblock %}
 
 {% block content %}
 <div class="d-flex align-items-baseline gap-3 mb-4">
-  <h1 class="mb-0">Новые вопросы</h1>
-  <a href="{% url 'hot' %}">Горячие</a>
+  {% if query %}
+    <h1 class="mb-0 text-break">Поиск по запросу «{{ query }}»</h1>
+  {% else %}
+    <h1 class="mb-0">Новые вопросы</h1>
+    <a href="{% url 'hot' %}">Горячие</a>
+  {% endif %}
 </div>
 {% include 'questions/includes/question_list.html' %}
 {% endblock %}

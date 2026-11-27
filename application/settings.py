@@ -147,3 +147,51 @@ INTERNAL_IPS = ['127.0.0.1', '::1']
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 CSRF_FAILURE_VIEW = 'questions.views.csrf_failure'
+
+REDIS_HOST = os.environ.get('REDIS_HOST', '127.0.0.1')
+REDIS_PORT = os.environ.get('REDIS_PORT', '6379')
+REDIS_CACHE_DB = int(os.environ.get('REDIS_CACHE_DB', '0'))
+REDIS_BROKER_DB = int(os.environ.get('REDIS_BROKER_DB', '1'))
+REDIS_BEAT_DB = int(os.environ.get('REDIS_BEAT_DB', '2'))
+REDIS_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f'{REDIS_URL}/{REDIS_CACHE_DB}',
+        'TIMEOUT': 600,
+        'KEY_PREFIX': 'forum',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'IGNORE_EXCEPTIONS': True,
+            'SOCKET_CONNECT_TIMEOUT': 1,
+            'SOCKET_TIMEOUT': 1,
+        },
+    },
+}
+
+CELERY_BROKER_URL = f'{REDIS_URL}/{REDIS_BROKER_DB}'
+CELERY_RESULT_BACKEND = f'{REDIS_URL}/{REDIS_BEAT_DB}'
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_TASK_PUBLISH_RETRY = False
+CELERY_BROKER_TRANSPORT_OPTIONS = {'socket_connect_timeout': 1, 'socket_timeout': 1}
+CELERY_BEAT_SCHEDULER = 'redbeat.RedBeatScheduler'
+CELERY_REDBEAT_REDIS_URL = f'{REDIS_URL}/{REDIS_BEAT_DB}'
+CELERY_BEAT_SCHEDULE = {
+    'popular-tags': {'task': 'core.tasks.refresh_popular_tags', 'schedule': 300},
+    'best-members': {'task': 'core.tasks.refresh_best_members', 'schedule': 300},
+}
+
+CENTRIFUGO_API_URL = os.environ.get('CENTRIFUGO_API_URL', 'http://127.0.0.1:8001/api').rstrip('/')
+CENTRIFUGO_WS_URL = os.environ.get('CENTRIFUGO_WS_URL', 'ws://localhost:8001/connection/websocket')
+CENTRIFUGO_API_KEY = os.environ.get('CENTRIFUGO_API_KEY', '')
+CENTRIFUGO_TOKEN_SECRET = os.environ.get('CENTRIFUGO_TOKEN_SECRET', '')
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '127.0.0.1')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '1025'))
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', '0') == '1'
+EMAIL_TIMEOUT = 5
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'forum@example.test')
+PUBLIC_SITE_URL = os.environ.get('PUBLIC_SITE_URL', 'http://localhost:8000').rstrip('/')
